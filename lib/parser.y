@@ -153,7 +153,7 @@ static int isTime(
  *
  * @param[in] unit      The unit to be freed.
  */
-static void freeKeepStatus(
+static void free_keep_status(
     ut_unit* const unit)
 {
     ut_status   prev = ut_get_status();
@@ -254,19 +254,19 @@ shift_exp:	product_exp {
 		} |
 		product_exp SHIFT REAL {
 		    $$ = ut_offset($1, $3);
-		    freeKeepStatus($1);
+		    free_keep_status($1);
 		    if ($$ == NULL)
 			YYERROR;
 		} |
 		product_exp SHIFT INT {
 		    $$ = ut_offset($1, $3);
-		    freeKeepStatus($1);
+		    free_keep_status($1);
 		    if ($$ == NULL)
 			YYERROR;
 		} |
 		product_exp SHIFT timestamp {
 		    $$ = ut_offset_by_time($1, $3);
-		    freeKeepStatus($1);
+		    free_keep_status($1);
 		    if ($$ == NULL)
 			YYERROR;
 		} |
@@ -285,8 +285,8 @@ product_exp:	power_exp {
 		product_exp power_exp	{
 		    $$ = ut_multiply($1, $2);
                     _isTime = isTime($$);
-		    freeKeepStatus($1);
-		    freeKeepStatus($2);
+		    free_keep_status($1);
+		    free_keep_status($2);
 		    if ($$ == NULL)
 			YYERROR;
 		} |
@@ -299,8 +299,8 @@ product_exp:	power_exp {
 		product_exp MULTIPLY power_exp	{
 		    $$ = ut_multiply($1, $3);
                     _isTime = isTime($$);
-		    freeKeepStatus($1);
-		    freeKeepStatus($3);
+		    free_keep_status($1);
+		    free_keep_status($3);
 		    if ($$ == NULL)
 			YYERROR;
 		} |
@@ -313,8 +313,8 @@ product_exp:	power_exp {
 		product_exp DIVIDE power_exp	{
 		    $$ = ut_divide($1, $3);
                     _isTime = isTime($$);
-		    freeKeepStatus($1);
-		    freeKeepStatus($3);
+		    free_keep_status($1);
+		    free_keep_status($3);
 		    if ($$ == NULL)
 			YYERROR;
 		} |
@@ -331,13 +331,13 @@ power_exp:	basic_exp {
 		} |
 		basic_exp INT {
 		    $$ = ut_raise($1, $2);
-		    freeKeepStatus($1);
+		    free_keep_status($1);
 		    if ($$ == NULL)
 			YYERROR;
 		} |
 		basic_exp EXPONENT {
 		    $$ = ut_raise($1, $2);
-		    freeKeepStatus($1);
+		    free_keep_status($1);
 		    if ($$ == NULL)
 			YYERROR;
 		} |
@@ -397,7 +397,7 @@ basic_exp:	ID {
 
 		    $$ = ut_scale(prefix, unit);
 
-		    freeKeepStatus(unit);
+		    free_keep_status(unit);
 
 		    if ($$ == NULL)
 			YYERROR;
@@ -413,7 +413,7 @@ basic_exp:	ID {
 		} |
 		LOGREF product_exp ')' {
 		    $$ = ut_log($1, $2);
-		    freeKeepStatus($2);
+		    free_keep_status($2);
 		    if ($$ == NULL)
 			YYERROR;
 		} |
